@@ -1,0 +1,119 @@
+<html>
+
+<head>
+    <title>Tic-Tok</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="app" class="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-blue-100">
+        <div class="max-w-md w-full bg-white px-10 py-4 rounded">
+            <div class="relative">
+                <h1 class="text-center text-2xl text-gray-600 font-bold">Tic Tac Toe</h2>
+                <h2 v-if="isCompleted == false" class="text-center text-lg mt-2 text-gray-400">Current player:
+                    {{currentPlayer}}</h2>
+                <h2 v-else class="text-center text-lg mt-2 text-gray-400">Winner is {{winner}}</h2>
+
+                <button @click="startGame" class="bg-blue-200 p-2 top-0 right-0 absolute rounded">
+                    <svg class="w-6 h-6 stroke-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>    
+            </div>
+                
+                <div class="grid grid-flow-col grid-rows-3 mt-4">
+                    <div class="flex h-32 w-32 items-center justify-center border text-5xl cursor-pointer" @click="changePlayer(index)"
+                        v-for="(cell, index) in cells">
+                        {{ cell }}
+                    </div>
+                </div>
+        </div>
+    </div>
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                currentPlayer: "X",
+                cells: [],
+                winner: "",
+                isCompleted: false
+            },
+            created() {
+                this.startGame();
+            },
+            methods: {
+                startGame() {
+                    this.winner = "";
+                    this.isCompleted = false;
+                    this.cells = [];
+                    for (let index = 0; index < 9; index++) {
+                        this.cells.push("");
+                    }
+                    this.currentPlayer = 'X';
+                },
+
+                changePlayer(index) {
+                    if (this.isCompleted == true) {
+                        return
+                    }
+
+                    if (this.cells[index] == "") {
+                        this.cells.splice(index, 1, this.currentPlayer);
+                    } else {
+                        return;
+                    }
+
+                    if (this.currentPlayer == "X") {
+                        this.currentPlayer = "O";
+                    } else {
+                        this.currentPlayer = "X";
+                    }
+
+                    this.checkForWinner();
+                },
+
+                checkForWinner() {
+                    for (let i = 0; i < 3; i += 1) {
+                        if (this.cells[i] != "") {
+                            if (this.cells[i] == this.cells[i + 3] && this.cells[i] == this.cells[i + 6]) {
+                                this.winner = this.cells[i];
+                                this.isCompleted = true;
+                                return;
+                            }
+                        }
+                    }
+
+                    for (let i = 0; i < 7; i += 3) {
+                        if (this.cells[i] != "") {
+                            if (this.cells[i] == this.cells[i + 1] && this.cells[i] == this.cells[i + 2]) {
+                                this.winner = this.cells[i];
+                                this.isCompleted = true;
+                                return;
+                            }
+                        }
+                    }
+
+                    if (this.cells[0] != "") {
+                        if (this.cells[0] == this.cells[4] && this.cells[0] == this.cells[8]) {
+                            this.winner = this.cells[0];
+                            this.isCompleted = true;
+                            return;
+                        }
+                    }
+
+                    if (this.cells[2] != "") {
+                        if (this.cells[2] == this.cells[4] && this.cells[4] == this.cells[6]) {
+                            this.winner = this.cells[2];
+                            this.isCompleted = true;
+                            return;
+                        }
+                    }
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
